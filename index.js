@@ -2,6 +2,26 @@ const Calculation = require('./calc');
 const arrays = require('./matrix');
 const calc = new Calculation();
 
+function setw(number1) {
+  let number = String(calc.round(number1, 3));
+  switch(number.length) {
+    case 0:
+      return "     ";
+    case 1:
+      return number + "    ";
+    case 2:
+      return number + "   ";
+    case 3: 
+      return number + "  ";
+    case 4:
+      return number + " ";
+    case 5:
+      return number;
+    default:
+      return NaN;
+  }
+}
+
 function findValues(arr) {
   let vectorPrior = calc.findAllPriorityInMatrix(arr);
   let vectorsArr = calc.priorityVector(calc.findAllPriorityInMatrix(arr));
@@ -10,18 +30,35 @@ function findValues(arr) {
   let indexConsArr = calc.indexCons(alphaMaxArr, arr.length);
   let consistencyRelationArr = calc.findConsistencyRelation(indexConsArr, arr);
   
+  function showMatrix(matrix, vector) {
+  let show = "";
+  for (let i = 0; i < matrix.length; i++) {
+    for (let j = 0; j < matrix[i].length; j++) {
+      show += setw(matrix[i][j]) + "|";
+    }
+    console.log(show + " W" + (i+1) + ": " + vector[i]); 
+    show = "";
+    }
+  }
+
+  /* 
   console.log("Собственный вектор (W(n)) - ");
   for (let i = 0; i < vectorPrior.length; i++) {
     console.log("                        " + (i+1) + ": " + vectorPrior[i])
   }
+
   console.log("Вектор приоритетов (W) - ");
   for (let i = 0; i < vectorsArr.length; i++) {
     console.log("                        " + (i+1) + ": " + vectorsArr[i])
   }
+
   console.log("Сумма (S) - ");
   for (let i = 0; i < sumColumnArr.length; i++) {
     console.log("                        " + (i+1) + ": " + sumColumnArr[i])
-  }
+  } 
+  */
+  
+  showMatrix(arr, vectorsArr);
   console.log("λmax - "  + alphaMaxArr);
   console.log("Индекс согласованности (ИС) - " + indexConsArr);
   console.log("Отношение согласованности (ОС) - " + consistencyRelationArr);
@@ -68,4 +105,4 @@ for (let i = 0; i < globalPrior.length; i++) {
   console.log(`${i+1}: ${globalPrior[i]}`);
 }
 const answer = calc.findBest(globalPrior);
-console.log("\n=== Вывод ===\n" + "Дом номер " + (answer+1) + " в приоритете");
+console.log(`\n=== Вывод ===\nДом номер ${answer+1} в приоритете`);
