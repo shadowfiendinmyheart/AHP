@@ -1,16 +1,18 @@
 class Calculation {
 
   constructor() {
+    //Значения индекса случайной согласованности(СС)
     this.CONSISTENCY_RELATION = [0, 0, 0.58, 0.9, 1.12, 1.24, 1.32, 1.41, 1.45, 1.49];
   }
 
+  //Округляет числа
   round(value, decimals) {
-    //Number(Math.round(value+'e'+decimals)+'e-'+decimals);
     const power = Math.pow(10, decimals);
     const answer = Math.ceil(value * power) / power;
     return answer;
   }
 
+  //Находит собственный вектор
   eigenvector(arr) {
     let mult = 1;
     for (let i = 0; i < arr.length; i++) {
@@ -20,6 +22,7 @@ class Calculation {
     return this.round(answer, 3);
   }
 
+  //Возвращает массив собственных векторов
   findAllPriorityInMatrix(arr) {
     let ansArr = [];
     for (let i = 0; i < arr.length; i++) {
@@ -28,6 +31,7 @@ class Calculation {
     return ansArr;
   }
 
+  //Находит вектор приоритета
   priorityVector(arr) {
     let sum = 0;
     let ansArr = [];
@@ -41,12 +45,13 @@ class Calculation {
     return ansArr;
   }
 
-  findSumColumn(arr) {
+  //Возвращает массив, состоящий из сумм столбцов матрицы
+  findSumColumn(matrix) {
     let sum = 0;
     let ansArr = [];
-    for (let i = 0; i < arr.length; i++) {
-      for (let j = 0; j < arr.length; j++) {
-        sum += arr[j][i];
+    for (let i = 0; i < matrix.length; i++) {
+      for (let j = 0; j < matrix[i].length; j++) {
+        sum += matrix[j][i];
       }
       ansArr.push(this.round(sum, 2));
       sum = 0;
@@ -54,6 +59,7 @@ class Calculation {
     return ansArr;
   }
 
+  //Находит степень согласованности
   findAlphaMax(arrVector, arrSum) {
     let sum = 0;
     for (let i = 0; i < arrVector.length; i++) {
@@ -62,14 +68,17 @@ class Calculation {
     return this.round(sum, 3);
   }
 
+  //Находит индекс согласованности
   indexCons(sum, n) {
     return this.round((sum - n) / (n - 1), 3);
   }
 
+  //Находит отношение согласованности
   findConsistencyRelation(indexCons, arr) {
     return this.round(indexCons / this.CONSISTENCY_RELATION[arr.length-1], 3);
   }
 
+  //Находит глобальные приоритеты
   calcGlobPrior(arrPrior, matrixVect) {
     let ans = [];
     let sum = 0;
@@ -81,7 +90,8 @@ class Calculation {
     }
     return ans;
   }
-
+  
+  //Выбирает лучший вариант из предложенных
   findBest(arr) {
     let maxValue = 0;
     let maxIndex = 0;

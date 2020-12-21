@@ -22,43 +22,48 @@ function setw(number1) {
   }
 }
 
+function showMatrixGlob(arrPrior, matrixVect, globPrior) {
+  let lineArr = "    ";
+  for (let i = 0; i < arrPrior.length; i++) {
+    lineArr += setw(arrPrior[i]) + "|";
+  }
+  console.log(lineArr);
+  console.log("----------------------------------------------");
+  let lineMatrix = "    ";
+  for (let i = 0; i < matrixVect[i].length; i++) {
+    for (let j = 0; j < matrixVect.length; j++) {
+      lineMatrix += setw(matrixVect[j][i]) + "|";
+    }
+    console.log(lineMatrix + " G" + (i+1) +": " + globPrior[i]); 
+    lineMatrix = "    ";
+  }
+}
+
 function findValues(arr) {
-  let vectorPrior = calc.findAllPriorityInMatrix(arr);
+  //let vectorPrior = calc.findAllPriorityInMatrix(arr);
   let vectorsArr = calc.priorityVector(calc.findAllPriorityInMatrix(arr));
   let sumColumnArr = calc.findSumColumn(arr);
   let alphaMaxArr = calc.findAlphaMax(vectorsArr, sumColumnArr);
   let indexConsArr = calc.indexCons(alphaMaxArr, arr.length);
   let consistencyRelationArr = calc.findConsistencyRelation(indexConsArr, arr);
-  
-  function showMatrix(matrix, vector) {
-  let show = "";
-  for (let i = 0; i < matrix.length; i++) {
-    for (let j = 0; j < matrix[i].length; j++) {
-      show += setw(matrix[i][j]) + "|";
+
+  function showMatrix(matrix, vector, sum) {
+    let line = "    ";
+    for (let i = 0; i < matrix.length; i++) {
+      for (let j = 0; j < matrix[i].length; j++) {
+        line += setw(matrix[i][j]) + "|";
+      }
+      console.log(line + " W" + (i+1) + ": " + vector[i]); 
+      line = "    ";
     }
-    console.log(show + " W" + (i+1) + ": " + vector[i]); 
-    show = "";
+    let lineSum = "S:  ";
+    for (let i = 0; i < sum.length; i++) {
+      lineSum += setw(sum[i]) + "|";
     }
+    console.log(lineSum);
   }
 
-  /* 
-  console.log("Собственный вектор (W(n)) - ");
-  for (let i = 0; i < vectorPrior.length; i++) {
-    console.log("                        " + (i+1) + ": " + vectorPrior[i])
-  }
-
-  console.log("Вектор приоритетов (W) - ");
-  for (let i = 0; i < vectorsArr.length; i++) {
-    console.log("                        " + (i+1) + ": " + vectorsArr[i])
-  }
-
-  console.log("Сумма (S) - ");
-  for (let i = 0; i < sumColumnArr.length; i++) {
-    console.log("                        " + (i+1) + ": " + sumColumnArr[i])
-  } 
-  */
-  
-  showMatrix(arr, vectorsArr);
+  showMatrix(arr, vectorsArr, sumColumnArr);
   console.log("λmax - "  + alphaMaxArr);
   console.log("Индекс согласованности (ИС) - " + indexConsArr);
   console.log("Отношение согласованности (ОС) - " + consistencyRelationArr);
@@ -87,22 +92,21 @@ console.log("\nОбщее состояние К7");
 findValues(arrays.generalState);
 
 console.log("\nФинансовые условия К8");
-findValues(arrays.sizeOfHouse);
+findValues(arrays.financialСonditions);
 
-console.log("\n=== Глобальные приоритеты ===");
-const globalPrior = calc.calcGlobPrior(calc.priorityVector(calc.findAllPriorityInMatrix(arrays.lvl2mtrx)),
-                                  [
-                                    calc.priorityVector(calc.findAllPriorityInMatrix(arrays.sizeOfHouse)),
-                                    calc.priorityVector(calc.findAllPriorityInMatrix(arrays.convenientBus)),
-                                    calc.priorityVector(calc.findAllPriorityInMatrix(arrays.neighborhood)),
-                                    calc.priorityVector(calc.findAllPriorityInMatrix(arrays.whenBuilt)),
-                                    calc.priorityVector(calc.findAllPriorityInMatrix(arrays.yard)),
-                                    calc.priorityVector(calc.findAllPriorityInMatrix(arrays.generalState)),
-                                    calc.priorityVector(calc.findAllPriorityInMatrix(arrays.financialСonditions)),
-                                  ])
+console.log("\n=== Матрица глобальных приоритетов ===");
+const arrPrior = calc.priorityVector(calc.findAllPriorityInMatrix(arrays.lvl2mtrx));
+const matrixVect = [
+  calc.priorityVector(calc.findAllPriorityInMatrix(arrays.sizeOfHouse)),
+  calc.priorityVector(calc.findAllPriorityInMatrix(arrays.convenientBus)),
+  calc.priorityVector(calc.findAllPriorityInMatrix(arrays.neighborhood)),
+  calc.priorityVector(calc.findAllPriorityInMatrix(arrays.whenBuilt)),
+  calc.priorityVector(calc.findAllPriorityInMatrix(arrays.yard)),
+  calc.priorityVector(calc.findAllPriorityInMatrix(arrays.generalState)),
+  calc.priorityVector(calc.findAllPriorityInMatrix(arrays.financialСonditions)),
+];
+const globalPrior = calc.calcGlobPrior(arrPrior, matrixVect);
+showMatrixGlob(arrPrior, matrixVect, globalPrior);
 
-for (let i = 0; i < globalPrior.length; i++) {
-  console.log(`${i+1}: ${globalPrior[i]}`);
-}
 const answer = calc.findBest(globalPrior);
 console.log(`\n=== Вывод ===\nДом номер ${answer+1} в приоритете`);
