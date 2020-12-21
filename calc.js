@@ -87,6 +87,7 @@ class Calculation {
         sum += arrPrior[j] * matrixVect[j][i];
       }
       ans.push(this.round(sum, 3));
+      sum = 0;
     }
     return ans;
   }
